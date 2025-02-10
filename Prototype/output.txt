@@ -1,0 +1,35 @@
+@startuml
+class lab2.DecryptionInputStream {
+    - decryptor : lab2.IDecryption
+    + <init>() : void
+    + read() : int
+    + read() : int
+}
+class lab2.EncryptionOutputStream {
+    - encryptor : lab2.IEncryption
+    + <init>() : void
+    + write() : void
+}
+class lab2.IDecryption {
+    + decrypt() : char
+}
+class lab2.IEncryption {
+    + encrypt() : char
+}
+class lab2.SubstitutionCipher {
+    - encryptionKey : char[]
+    - decryptionKey : char[]
+    + <init>() : void
+    + encrypt() : char
+    + decrypt() : char
+}
+class lab2.TextEditorApp {
+    + <init>() : void
+    + main(String[] args) : void
+}
+lab2.DecryptionInputStream --> lab2.IDecryption
+lab2.EncryptionOutputStream --> lab2.IEncryption
+lab2.SubstitutionCipher ..|> lab2.IEncryption: implements
+lab2.SubstitutionCipher ..|> lab2.IDecryption: implements
+lab2.TextEditorApp --> lab2.SubstitutionCipher
+@enduml
