@@ -29,6 +29,7 @@ public class Analyzer {
 
         //Class Name
         String className = classNode.name.replace('/', '.');
+        output.append("class ").append(className).append(" {\n");
 
         //Interfaces
         for(String interfaces: classNode.interfaces){

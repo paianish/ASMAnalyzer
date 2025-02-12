@@ -17,5 +17,7 @@ public class Runner {
         Formatter formatter = new Formatter();
 
         System.out.println(formatter.analyzeProject(list));
+        Report report = new Report();
+        report.generateReport(formatter.analyzeProject(list));
     }
 }
