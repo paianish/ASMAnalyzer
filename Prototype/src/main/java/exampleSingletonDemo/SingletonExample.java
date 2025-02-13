@@ -1,3 +1,5 @@
+package exampleSingletonDemo;
+
 public class SingletonExample {
   private SingletonExample() {
   }

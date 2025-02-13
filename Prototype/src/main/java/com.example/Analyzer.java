@@ -60,38 +60,40 @@ public class Analyzer {
 
         //Methods
         for (MethodNode method : classNode.methods) {
-            String access = "";
-            if(method.access == 1 || method.access ==9){
-                access = "    + ";
-            }else {
-                access = "    - ";
-            }
-            output.append(access).append(method.name).append("(");
-            List<String> out = new ArrayList<>();
-            Type[] argTypes = Type.getArgumentTypes(method.desc);
-            List<ParameterNode> parameters = method.parameters;
-            if (parameters != null && parameters.size() > 0 && argTypes.length > 0) {
-                int parametersIndex = 0;
-                for (int i = 0; i < argTypes.length; i++) {
-                    ParameterNode var = parameters.get(parametersIndex++);
-                    String[] classNames = argTypes[i].getClassName().split("\\.");
-                    out.add(classNames[classNames.length - 1] + " " + var.name);
+            if(!method.name.startsWith("lambda$")) {
+                String access = "";
+                if (method.access == 1 || method.access == 9) {
+                    access = "    + ";
+                } else {
+                    access = "    - ";
                 }
-            }
-            output.append(String.join(", ", out));
-            if(method.localVariables != null) {
-                for (LocalVariableNode localVars : method.localVariables) {
-                    String typeName = Type.getType(localVars.desc).getClassName();
-                    if (!localVars.name.equals("this") && !typeName.startsWith("java.") && !typeName.startsWith("javax.") && !typeName.startsWith("char") && !typeName.startsWith("int") && !typeName.startsWith("String") && !typeName.startsWith("double") && !typeName.startsWith("float") && !typeName.startsWith("long") && !typeName.startsWith("short") && !typeName.startsWith("byte") && !typeName.startsWith("org.") && !typeName.startsWith("net.") && !typeName.startsWith("boolean")) {
-                        String newRelation = className + " --> " + typeName + "\n";
-                        if(!relations.toString().contains(newRelation)){
-                            relations.append(newRelation);
+                output.append(access).append(method.name).append("(");
+                List<String> out = new ArrayList<>();
+                Type[] argTypes = Type.getArgumentTypes(method.desc);
+                List<ParameterNode> parameters = method.parameters;
+                if (parameters != null && parameters.size() > 0 && argTypes.length > 0) {
+                    int parametersIndex = 0;
+                    for (int i = 0; i < argTypes.length; i++) {
+                        ParameterNode var = parameters.get(parametersIndex++);
+                        String[] classNames = argTypes[i].getClassName().split("\\.");
+                        out.add(classNames[classNames.length - 1] + " " + var.name);
+                    }
+                }
+                output.append(String.join(", ", out));
+                if (method.localVariables != null) {
+                    for (LocalVariableNode localVars : method.localVariables) {
+                        String typeName = Type.getType(localVars.desc).getClassName();
+                        if (!localVars.name.equals("this") && !typeName.startsWith("java.") && !typeName.startsWith("javax.") && !typeName.startsWith("char") && !typeName.startsWith("int") && !typeName.startsWith("String") && !typeName.startsWith("double") && !typeName.startsWith("float") && !typeName.startsWith("long") && !typeName.startsWith("short") && !typeName.startsWith("byte") && !typeName.startsWith("org.") && !typeName.startsWith("net.") && !typeName.startsWith("boolean")) {
+                            String newRelation = className + " --> " + typeName + "\n";
+                            if (!relations.toString().contains(newRelation)) {
+                                relations.append(newRelation);
+                            }
                         }
                     }
                 }
-            }
 
-            output.append(") : " + Type.getReturnType(method.desc).getClassName() + "\n");
+                output.append(") : " + Type.getReturnType(method.desc).getClassName() + "\n");
+            }
         }
 
         output.append("}\n");

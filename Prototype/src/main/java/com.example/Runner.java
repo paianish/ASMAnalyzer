@@ -2,37 +2,34 @@ package com.example;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.nio.file.*;
 
 public class Runner {
 
     public static void main(String[] args) throws IOException {
-        ArrayList<String> list = new ArrayList<>();
-        list.add("lab2/DecryptionInputStream.class");
-        list.add("lab2/EncryptionOutputStream.class");
-        list.add("lab2/IDecryption.class");
-        list.add("lab2/IEncryption.class");
-        list.add("lab2/SubstitutionCipher.class");
-        list.add("lab2/TextEditorApp.class");
-        list.add("lab2/SingletonExample.class");
+        ArrayList<String> paths = new ArrayList<>();
 
-        list.add("target/classes/pizzaDecoratorDemo/PlainPizza.class");
-        list.add("target/classes/pizzaDecoratorDemo/PizzaDecorator.class");
-        list.add("target/classes/pizzaDecoratorDemo/CheeseDecorator.class");
-        list.add("target/classes/pizzaDecoratorDemo/PepperoniDecorator.class");
-        list.add("target/classes/pizzaDecoratorDemo/Pizza.class");
+        String directoryPath = "target/classes";
 
-        list.add("target/classes/com/example/Analyzer.class");
-        list.add("target/classes/com/example/Annotator.class");
-        list.add("target/classes/com/example/Formatter.class");
-        list.add("target/classes/com/example/Parser.class");
-        list.add("target/classes/com/example/Report.class");
-        list.add("target/classes/com/example/Runner.class");
-
+        paths = findClassFiles(directoryPath);
 
         Formatter formatter = new Formatter();
-
-        System.out.println(formatter.analyzeProject(list));
         Report report = new Report();
-        report.generateReport(formatter.analyzeProject(list));
+
+        String umlCode = formatter.analyzeProject(paths);
+        System.out.println(umlCode);
+        report.generateReport(umlCode);
+    }
+
+    private static ArrayList<String> findClassFiles(String directoryPath){
+        ArrayList<String> paths = new ArrayList<>();
+        Path startPath = Paths.get(directoryPath);
+
+        try{
+            Files.walk(startPath).filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class")).forEach(path -> paths.add(path.toString()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return paths;
     }
 }

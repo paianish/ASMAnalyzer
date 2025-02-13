@@ -14,8 +14,5 @@ public class TextEditorApp {
 		OutputStream fOut = new FileOutputStream("./input_output/encryptedout.txt");		
 		InputStream in = new DecryptionInputStream(fIn, cipher);
 		OutputStream out = new EncryptionOutputStream(fOut, cipher);
-		
-		TextEditor editor = new TextEditor(in, out);
-		editor.execute();
 	}	
 }
