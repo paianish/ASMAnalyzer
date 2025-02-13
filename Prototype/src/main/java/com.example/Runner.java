@@ -21,6 +21,13 @@ public class Runner {
         list.add("target/classes/pizzaDecoratorDemo/PepperoniDecorator.class");
         list.add("target/classes/pizzaDecoratorDemo/Pizza.class");
 
+        list.add("target/classes/com/example/Analyzer.class");
+        list.add("target/classes/com/example/Annotator.class");
+        list.add("target/classes/com/example/Formatter.class");
+        list.add("target/classes/com/example/Parser.class");
+        list.add("target/classes/com/example/Report.class");
+        list.add("target/classes/com/example/Runner.class");
+
 
         Formatter formatter = new Formatter();
 
