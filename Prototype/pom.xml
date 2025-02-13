@@ -33,13 +33,22 @@
             <artifactId>plantuml</artifactId>
             <version>1.2025.0</version>
         </dependency>
-
-
     </dependencies>
-
 
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin with -parameters flag -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -56,21 +65,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- build>
-
-        <plugins>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <mainClass>ASMAnalyzer.Prototype</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build -->
-
-
 </project>
