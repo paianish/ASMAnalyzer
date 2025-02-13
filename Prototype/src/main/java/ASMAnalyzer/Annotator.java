@@ -1,4 +1,4 @@
-package com.example;
+package ASMAnalyzer;
 
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;

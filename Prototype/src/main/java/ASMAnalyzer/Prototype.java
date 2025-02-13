@@ -1,4 +1,4 @@
-package com.example;
+package ASMAnalyzer;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

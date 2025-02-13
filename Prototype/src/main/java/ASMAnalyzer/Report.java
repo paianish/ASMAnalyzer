@@ -1,4 +1,4 @@
-package com.example;
+package ASMAnalyzer;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;

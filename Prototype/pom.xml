@@ -49,7 +49,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.example.Runner</mainClass>
+                            <mainClass>ASMAnalyzer.Runner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -66,7 +66,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.example.Prototype</mainClass>
+                    <mainClass>ASMAnalyzer.Prototype</mainClass>
                 </configuration>
             </plugin>
         </plugins>

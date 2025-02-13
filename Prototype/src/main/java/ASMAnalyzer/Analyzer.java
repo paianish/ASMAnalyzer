@@ -1,6 +1,5 @@
-package com.example;
+package ASMAnalyzer;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
