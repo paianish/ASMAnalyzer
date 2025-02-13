@@ -1,3 +1,5 @@
+package pizzaDecoratorDemo;
+
 public abstract class PizzaDecorator implements Pizza {
     protected Pizza decoratedPizza;
 

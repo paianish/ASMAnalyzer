@@ -1,3 +1,5 @@
+package pizzaDecoratorDemo;
+
 public class CheeseDecorator extends PizzaDecorator {
     public CheeseDecorator(Pizza decoratedPizza) {
         super(decoratedPizza);

@@ -1,3 +1,5 @@
+package pizzaDecoratorDemo;
+
 public class PlainPizza implements Pizza {
     @Override
     public String getDescription() {

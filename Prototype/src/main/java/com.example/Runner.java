@@ -14,6 +14,13 @@ public class Runner {
         list.add("lab2/SubstitutionCipher.class");
         list.add("lab2/TextEditorApp.class");
 
+        list.add("target/classes/pizzaDecoratorDemo/PlainPizza.class");
+        list.add("target/classes/pizzaDecoratorDemo/PizzaDecorator.class");
+        list.add("target/classes/pizzaDecoratorDemo/CheeseDecorator.class");
+        list.add("target/classes/pizzaDecoratorDemo/PepperoniDecorator.class");
+        list.add("target/classes/pizzaDecoratorDemo/Pizza.class");
+
+
         Formatter formatter = new Formatter();
 
         System.out.println(formatter.analyzeProject(list));

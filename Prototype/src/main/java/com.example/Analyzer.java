@@ -29,7 +29,31 @@ public class Analyzer {
 
         //Class Name
         String className = classNode.name.replace('/', '.');
-        output.append("class ").append(className).append(" {\n");
+
+        //decorator pattern variables
+        boolean isDecorator = false;
+        String decoratorRelation = "";
+        String decoratorAnnotation = "";
+
+        //decorator pattern interface check
+        for (String interfaces : classNode.interfaces) {
+            interfaces = interfaces.replace('/', '.');
+            for (FieldNode field : classNode.fields) {
+                String typeName = Type.getType(field.desc).getClassName();
+                if(typeName.equals(interfaces)) {
+                    isDecorator = true;
+                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+//                        decoratorAnnotation = className + " #90D5FF : Decorator\n";
+                }
+            }
+        }
+
+        if(isDecorator==true){
+            output.append("class ").append(className).append(" #90D5FF {\n");
+        }else{
+            output.append("class ").append(className).append(" {\n");
+
+        }
 
         //Interfaces
         for(String interfaces: classNode.interfaces){
@@ -82,6 +106,10 @@ public class Analyzer {
             output.append(") : " + Type.getReturnType(method.desc).getClassName() + "\n");
         }
 
+        if(isDecorator){
+            relations.append(decoratorRelation);
+            relations.append(decoratorAnnotation);
+        }
         output.append("}\n");
 
         return new CodeAndRelations(output,relations);
