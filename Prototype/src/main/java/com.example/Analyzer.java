@@ -60,7 +60,7 @@ public class Analyzer {
 
         //Methods
         for (MethodNode method : classNode.methods) {
-            if(!method.name.startsWith("lambda$")) {
+            if(!method.name.startsWith("lambda$") && !method.name.startsWith("<")) {
                 String access = "";
                 if (method.access == 1 || method.access == 9) {
                     access = "    + ";
