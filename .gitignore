@@ -1,4 +1,5 @@
 Prototype/target
 Prototype/*.svg
+Prototype/output.txt
 Prototype/.idea
 Prototype/.idea/*
