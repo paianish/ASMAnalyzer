@@ -95,6 +95,8 @@ public class Analyzer {
             }
         }
 
+
+
         output.append("}\n");
 
         output.append(relations);

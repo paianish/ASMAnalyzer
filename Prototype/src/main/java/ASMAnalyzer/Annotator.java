@@ -41,6 +41,20 @@ public class Annotator {
             }
         }
 
+        String parent;
+        if(classNode.superName != null) {
+            parent = classNode.superName.replace('/', '.');
+        }
+        else{
+            parent = "";
+        }
+
+        //gets actual decorating classes
+        if(parent.endsWith("Decorator")){
+            isDecorator = true;
+            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
+        }
+
         if (isSingleton) {
             output.append(className).append(" -[#red]> ").append(className).append("\n");
             output.append("class ").append(className).append(" <<Singleton>> #red {\n");
