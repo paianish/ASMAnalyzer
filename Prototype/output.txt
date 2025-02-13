@@ -1,35 +1,91 @@
 @startuml
+class ASMAnalyzer.Analyzer {
+    - parser : ASMAnalyzer.Parser
+    - annotator : ASMAnalyzer.Annotator
+    + analyzeFile() : java.lang.String
+    - analyzeClassNode() : java.lang.String
+}
+ASMAnalyzer.Analyzer --> ASMAnalyzer.Parser
+ASMAnalyzer.Analyzer --> ASMAnalyzer.Annotator
+class ASMAnalyzer.Annotator {
+    + annotate() : java.lang.String
+}
+class ASMAnalyzer.Formatter {
+    - analyzer : ASMAnalyzer.Analyzer
+    + analyzeProject() : java.lang.String
+}
+ASMAnalyzer.Formatter --> ASMAnalyzer.Analyzer
+class ASMAnalyzer.Parser {
+    + parseFile() : org.objectweb.asm.ClassReader
+}
+class ASMAnalyzer.Prototype {
+    + main() : void
+}
+class ASMAnalyzer.Report {
+    + generateReport() : void
+}
+class ASMAnalyzer.Runner {
+    + main() : void
+    - findClassFiles() : java.util.ArrayList
+}
+ASMAnalyzer.Runner --> ASMAnalyzer.Formatter
+ASMAnalyzer.Runner --> ASMAnalyzer.Report
+exampleSingletonDemo.SingletonExample -[#red]> exampleSingletonDemo.SingletonExample
+class exampleSingletonDemo.SingletonExample <<Singleton>> #red {
+    + getInstance() : exampleSingletonDemo.SingletonExample
+}
 class lab2.DecryptionInputStream {
     - decryptor : lab2.IDecryption
-    + <init>() : void
     + read() : int
     + read() : int
 }
+lab2.DecryptionInputStream --> lab2.IDecryption
 class lab2.EncryptionOutputStream {
     - encryptor : lab2.IEncryption
-    + <init>() : void
     + write() : void
 }
+lab2.EncryptionOutputStream --> lab2.IEncryption
 class lab2.IDecryption {
-    + decrypt() : char
+    - decrypt() : char
 }
 class lab2.IEncryption {
-    + encrypt() : char
+    - encrypt() : char
 }
 class lab2.SubstitutionCipher {
     - encryptionKey : char[]
     - decryptionKey : char[]
-    + <init>() : void
     + encrypt() : char
     + decrypt() : char
 }
-class lab2.TextEditorApp {
-    + <init>() : void
-    + main(String[] args) : void
-}
-lab2.DecryptionInputStream --> lab2.IDecryption
-lab2.EncryptionOutputStream --> lab2.IEncryption
 lab2.SubstitutionCipher ..|> lab2.IEncryption: implements
 lab2.SubstitutionCipher ..|> lab2.IDecryption: implements
+class lab2.TextEditorApp {
+    + main() : void
+}
 lab2.TextEditorApp --> lab2.SubstitutionCipher
+class pizzaDecoratorDemo.CheeseDecorator {
+    + getDescription() : java.lang.String
+    + cost() : double
+}
+class pizzaDecoratorDemo.PepperoniDecorator {
+    + getDescription() : java.lang.String
+    + cost() : double
+}
+class pizzaDecoratorDemo.Pizza {
+    - getDescription() : java.lang.String
+    - cost() : double
+}
+pizzaDecoratorDemo.PizzaDecorator-[#90D5FF]>pizzaDecoratorDemo.Pizza: decorates
+class pizzaDecoratorDemo.PizzaDecorator #90D5FF {
+    + decoratedPizza : pizzaDecoratorDemo.Pizza
+    + getDescription() : java.lang.String
+    + cost() : double
+}
+pizzaDecoratorDemo.PizzaDecorator ..|> pizzaDecoratorDemo.Pizza: implements
+pizzaDecoratorDemo.PizzaDecorator --> pizzaDecoratorDemo.Pizza
+class pizzaDecoratorDemo.PlainPizza {
+    + getDescription() : java.lang.String
+    + cost() : double
+}
+pizzaDecoratorDemo.PlainPizza ..|> pizzaDecoratorDemo.Pizza: implements
 @enduml

@@ -1,6 +1,7 @@
 package ASMAnalyzer;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.nio.file.*;
 
@@ -18,6 +19,9 @@ public class Runner {
 
         String umlCode = formatter.analyzeProject(paths);
         System.out.println(umlCode);
+        try (PrintWriter out = new PrintWriter("output.txt")) {
+            out.println(umlCode);
+        }
         report.generateReport(umlCode);
     }
 
