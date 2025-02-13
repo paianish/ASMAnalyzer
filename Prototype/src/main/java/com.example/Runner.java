@@ -13,6 +13,7 @@ public class Runner {
         list.add("lab2/IEncryption.class");
         list.add("lab2/SubstitutionCipher.class");
         list.add("lab2/TextEditorApp.class");
+        list.add("lab2/SingletonExample.class");
 
         list.add("target/classes/pizzaDecoratorDemo/PlainPizza.class");
         list.add("target/classes/pizzaDecoratorDemo/PizzaDecorator.class");

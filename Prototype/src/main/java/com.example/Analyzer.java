@@ -30,6 +30,21 @@ public class Analyzer {
         //Class Name
         String className = classNode.name.replace('/', '.');
 
+        boolean isSingleton = false;
+        //Find singleton pattern
+        for (MethodNode method : classNode.methods) {
+          if (Type.getReturnType(method.desc).getClassName().equals(className)) {
+            isSingleton = true;
+          }
+        }
+
+        if (isSingleton) {
+            output.append(className).append(" -[#red]> ").append(className).append("\n");
+            output.append("class ").append(className).append(" <<Singleton>> #red {\n");
+        } else {
+            output.append("class ").append(className).append(" {\n");
+        }
+
         //decorator pattern variables
         boolean isDecorator = false;
         String decoratorRelation = "";
