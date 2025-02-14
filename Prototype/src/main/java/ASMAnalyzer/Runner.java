@@ -1,5 +1,7 @@
 package ASMAnalyzer;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -23,6 +25,26 @@ public class Runner {
             out.println(umlCode);
         }
         report.generateReport(umlCode);
+
+        String outputImagePath = "output.svg";
+
+        Desktop desktop = Desktop.getDesktop();
+
+        if (desktop.isSupported(Desktop.Action.OPEN)) {
+            try {
+                File svgFile = new File(outputImagePath);
+
+                if (svgFile.exists()) {
+                    desktop.open(svgFile); // Opens in default SVG viewer
+                } else {
+                    System.out.println("File does not exist.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Open action is not supported on this system.");
+        }
     }
 
     private static ArrayList<String> findClassFiles(String directoryPath){

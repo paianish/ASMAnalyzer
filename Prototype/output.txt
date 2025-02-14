@@ -2,31 +2,28 @@
 class ASMAnalyzer.Analyzer {
     - parser : ASMAnalyzer.Parser
     - annotator : ASMAnalyzer.Annotator
-    + analyzeFile() : java.lang.String
-    - analyzeClassNode() : java.lang.String
+    + analyzeFile(String path) : java.lang.String
+    - analyzeClassNode(ClassNode classNode) : java.lang.String
 }
 ASMAnalyzer.Analyzer --> ASMAnalyzer.Parser
 ASMAnalyzer.Analyzer --> ASMAnalyzer.Annotator
 class ASMAnalyzer.Annotator {
-    + annotate() : java.lang.String
+    + annotate(ClassNode classNode) : java.lang.String
 }
 class ASMAnalyzer.Formatter {
     - analyzer : ASMAnalyzer.Analyzer
-    + analyzeProject() : java.lang.String
+    + analyzeProject(ArrayList list) : java.lang.String
 }
 ASMAnalyzer.Formatter --> ASMAnalyzer.Analyzer
 class ASMAnalyzer.Parser {
-    + parseFile() : org.objectweb.asm.ClassReader
-}
-class ASMAnalyzer.Prototype {
-    + main() : void
+    + parseFile(String path) : org.objectweb.asm.ClassReader
 }
 class ASMAnalyzer.Report {
-    + generateReport() : void
+    + generateReport(String umlCode) : void
 }
 class ASMAnalyzer.Runner {
-    + main() : void
-    - findClassFiles() : java.util.ArrayList
+    + main(String[] args) : void
+    - findClassFiles(String directoryPath) : java.util.ArrayList
 }
 ASMAnalyzer.Runner --> ASMAnalyzer.Formatter
 ASMAnalyzer.Runner --> ASMAnalyzer.Report
@@ -37,37 +34,39 @@ class exampleSingletonDemo.SingletonExample <<Singleton>> #red {
 class lab2.DecryptionInputStream {
     - decryptor : lab2.IDecryption
     + read() : int
-    + read() : int
+    + read(byte[] b, int off, int len) : int
 }
 lab2.DecryptionInputStream --> lab2.IDecryption
 class lab2.EncryptionOutputStream {
     - encryptor : lab2.IEncryption
-    + write() : void
+    + write(int b) : void
 }
 lab2.EncryptionOutputStream --> lab2.IEncryption
 class lab2.IDecryption {
-    - decrypt() : char
+    - decrypt(char cipher) : char
 }
 class lab2.IEncryption {
-    - encrypt() : char
+    - encrypt(char plain) : char
 }
 class lab2.SubstitutionCipher {
     - encryptionKey : char[]
     - decryptionKey : char[]
-    + encrypt() : char
-    + decrypt() : char
+    + encrypt(char plain) : char
+    + decrypt(char cipher) : char
 }
 lab2.SubstitutionCipher ..|> lab2.IEncryption: implements
 lab2.SubstitutionCipher ..|> lab2.IDecryption: implements
 class lab2.TextEditorApp {
-    + main() : void
+    + main(String[] args) : void
 }
 lab2.TextEditorApp --> lab2.SubstitutionCipher
-class pizzaDecoratorDemo.CheeseDecorator {
+pizzaDecoratorDemo.CheeseDecorator-[#90D5FF]>pizzaDecoratorDemo.PizzaDecorator
+class pizzaDecoratorDemo.CheeseDecorator #90D5FF {
     + getDescription() : java.lang.String
     + cost() : double
 }
-class pizzaDecoratorDemo.PepperoniDecorator {
+pizzaDecoratorDemo.PepperoniDecorator-[#90D5FF]>pizzaDecoratorDemo.PizzaDecorator
+class pizzaDecoratorDemo.PepperoniDecorator #90D5FF {
     + getDescription() : java.lang.String
     + cost() : double
 }
