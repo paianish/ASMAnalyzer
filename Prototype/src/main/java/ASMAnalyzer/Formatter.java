@@ -18,7 +18,7 @@ public class Formatter {
         for(String path : list){
             output.append(analyzer.analyzeFile(path));
         }
-
+        output.append(analyzer.getNotes());
         output.append("@enduml");
 
         return output.toString();

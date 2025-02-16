@@ -3,18 +3,30 @@ class ASMAnalyzer.Analyzer {
     - parser : ASMAnalyzer.Parser
     - annotator : ASMAnalyzer.Annotator
     + analyzeFile(String path) : java.lang.String
+    + getNotes() : java.lang.String
     - analyzeClassNode(ClassNode classNode) : java.lang.String
 }
 ASMAnalyzer.Analyzer --> ASMAnalyzer.Parser
 ASMAnalyzer.Analyzer --> ASMAnalyzer.Annotator
 class ASMAnalyzer.Annotator {
+    - packageMap : java.util.Map
     + annotate(ClassNode classNode) : java.lang.String
+    + getPackageName(String className) : java.lang.String
+    + getNotes() : java.lang.String
 }
 class ASMAnalyzer.Formatter {
     - analyzer : ASMAnalyzer.Analyzer
     + analyzeProject(ArrayList list) : java.lang.String
 }
 ASMAnalyzer.Formatter --> ASMAnalyzer.Analyzer
+class ASMAnalyzer.PackageCounter {
+    - decoratorCount : int
+    - singletonCount : int
+    + incrementSingletonCount() : void
+    + incrementDecoratorCount() : void
+    + getDecoratorCount() : int
+    + getSingletonCount() : int
+}
 class ASMAnalyzer.Parser {
     + parseFile(String path) : org.objectweb.asm.ClassReader
 }
@@ -87,4 +99,24 @@ class pizzaDecoratorDemo.PlainPizza {
     + cost() : double
 }
 pizzaDecoratorDemo.PlainPizza ..|> pizzaDecoratorDemo.Pizza: implements
+note top of ASMAnalyzer
+    Decorator Count: 0
+    Singleton Count: 0
+end note 
+
+note top of lab2
+    Decorator Count: 0
+    Singleton Count: 0
+end note 
+
+note top of exampleSingletonDemo
+    Decorator Count: 0
+    Singleton Count: 1
+end note 
+
+note top of pizzaDecoratorDemo
+    Decorator Count: 3
+    Singleton Count: 0
+end note 
+
 @enduml

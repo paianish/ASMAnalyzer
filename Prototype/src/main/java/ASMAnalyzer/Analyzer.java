@@ -23,6 +23,10 @@ public class Analyzer {
         return analyzedClassCode;
     }
 
+    public String getNotes(){
+        return annotator.getNotes();
+    }
+
     private String analyzeClassNode(ClassNode classNode){
         StringBuilder output = new StringBuilder();
         StringBuilder relations = new StringBuilder();

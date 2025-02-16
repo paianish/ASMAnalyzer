@@ -35,7 +35,7 @@ public class Runner {
                 File svgFile = new File(outputImagePath);
 
                 if (svgFile.exists()) {
-                    desktop.open(svgFile); // Opens in default SVG viewer
+                    desktop.open(svgFile);
                 } else {
                     System.out.println("File does not exist.");
                 }
