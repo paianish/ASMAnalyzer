@@ -93,8 +93,14 @@ public class Annotator {
 
         for(String packageName : packageMap.keySet()){
             output.append("note top of ").append(packageName).append("\n");
+
             output.append("    Decorator Count: ").append(packageMap.get(packageName).getDecoratorCount()).append("\n");
+
+            if(packageMap.get(packageName).getSingletonCount() >= 4){
+                output.append("    SINGLETON ABUSE\n");
+            }
             output.append("    Singleton Count: ").append(packageMap.get(packageName).getSingletonCount()).append("\n");
+
             output.append("end note \n\n");
         }
 

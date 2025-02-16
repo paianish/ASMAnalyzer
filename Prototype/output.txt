@@ -43,6 +43,18 @@ exampleSingletonDemo.SingletonExample -[#red]> exampleSingletonDemo.SingletonExa
 class exampleSingletonDemo.SingletonExample <<Singleton>> #red {
     + getInstance() : exampleSingletonDemo.SingletonExample
 }
+exampleSingletonDemo.SingletonExample2 -[#red]> exampleSingletonDemo.SingletonExample2
+class exampleSingletonDemo.SingletonExample2 <<Singleton>> #red {
+    + getInstance() : exampleSingletonDemo.SingletonExample2
+}
+exampleSingletonDemo.SingletonExample3 -[#red]> exampleSingletonDemo.SingletonExample3
+class exampleSingletonDemo.SingletonExample3 <<Singleton>> #red {
+    + getInstance() : exampleSingletonDemo.SingletonExample3
+}
+exampleSingletonDemo.SingletonExample4 -[#red]> exampleSingletonDemo.SingletonExample4
+class exampleSingletonDemo.SingletonExample4 <<Singleton>> #red {
+    + getInstance() : exampleSingletonDemo.SingletonExample4
+}
 class lab2.DecryptionInputStream {
     - decryptor : lab2.IDecryption
     + read() : int
@@ -111,7 +123,8 @@ end note
 
 note top of exampleSingletonDemo
     Decorator Count: 0
-    Singleton Count: 1
+    SINGLETON ABUSE
+    Singleton Count: 4
 end note 
 
 note top of pizzaDecoratorDemo
