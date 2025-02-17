@@ -51,10 +51,10 @@ public class Analyzer {
         for (FieldNode field : classNode.fields) {
             String typeName = Type.getType(field.desc).getClassName();
             String access = "";
-            if(field.access == 2){
-                access = "    - ";
-            }else{
+            if(field.access%2 == 1){
                 access = "    + ";
+            }else{
+                access = "    - ";
             }
             output.append(access).append(field.name).append(" : ").append(typeName).append("\n");
             if (classNames.contains(typeName)) {
@@ -69,7 +69,7 @@ public class Analyzer {
         for (MethodNode method : classNode.methods) {
             if(!method.name.startsWith("lambda$") && !method.name.startsWith("<")) {
                 String access = "";
-                if (method.access == 1 || method.access == 9) {
+                if (method.access % 2 == 1) {
                     access = "    + ";
                 } else {
                     access = "    - ";
