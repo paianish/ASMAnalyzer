@@ -19,15 +19,13 @@ public class Report {
         SourceStringReader reader = new SourceStringReader(umlCode);
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         // Write the first image to "os"
-        String desc = reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
-        os.close();
+        reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
 
         // The XML is stored into svg
         final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
         try (PrintWriter out = new PrintWriter(outputPath)) {
             out.println(svg);
         }
-
+        os.close();
     }
-
 }

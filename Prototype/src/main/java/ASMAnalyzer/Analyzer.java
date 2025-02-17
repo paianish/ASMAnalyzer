@@ -5,15 +5,19 @@ import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Analyzer {
 
     private Parser parser;
     private Annotator annotator;
-    public Analyzer(){
+    private Set<String> classNames;
+    public Analyzer(Set<String> classNames){
         parser = new Parser();
         annotator = new Annotator();
+        this.classNames = classNames;
     }
 
     public String analyzeFile(String path) throws IOException {
@@ -53,7 +57,7 @@ public class Analyzer {
                 access = "    + ";
             }
             output.append(access).append(field.name).append(" : ").append(typeName).append("\n");
-            if (!typeName.startsWith("java.") && !typeName.startsWith("javax.") && !typeName.startsWith("char") && !typeName.startsWith("int") && !typeName.startsWith("String") && !typeName.startsWith("double") && !typeName.startsWith("float")&& !typeName.startsWith("long") && !typeName.startsWith("short") && !typeName.startsWith("byte") && !typeName.startsWith("org.") && !typeName.startsWith("net.") && !typeName.startsWith("boolean")) {
+            if (classNames.contains(typeName)) {
                 String newRelation = className + " --> " + typeName + "\n";
                 if(!relations.toString().contains(newRelation)){
                     relations.append(newRelation);
@@ -86,7 +90,7 @@ public class Analyzer {
                 if (method.localVariables != null) {
                     for (LocalVariableNode localVars : method.localVariables) {
                         String typeName = Type.getType(localVars.desc).getClassName();
-                        if (!localVars.name.equals("this") && !typeName.startsWith("java.") && !typeName.startsWith("javax.") && !typeName.startsWith("char") && !typeName.startsWith("int") && !typeName.startsWith("String") && !typeName.startsWith("double") && !typeName.startsWith("float") && !typeName.startsWith("long") && !typeName.startsWith("short") && !typeName.startsWith("byte") && !typeName.startsWith("org.") && !typeName.startsWith("net.") && !typeName.startsWith("boolean")) {
+                        if (!localVars.name.equals("this") && classNames.contains(typeName)) {
                             String newRelation = className + " --> " + typeName + "\n";
                             if (!relations.toString().contains(newRelation)) {
                                 relations.append(newRelation);
