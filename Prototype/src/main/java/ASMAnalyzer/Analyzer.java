@@ -57,10 +57,21 @@ public class Analyzer {
                 access = "    - ";
             }
             output.append(access).append(field.name).append(" : ").append(typeName).append("\n");
-            if (classNames.contains(typeName)) {
-                String newRelation = className + " --> " + typeName + "\n";
-                if(!relations.toString().contains(newRelation)){
-                    relations.append(newRelation);
+
+            if (typeName.contains("[")) {
+                String cleanName = typeName.substring(0, typeName.indexOf("["));
+                if (classNames.contains(cleanName)) {
+                    String newRelation = className + " \"1\"-->\"*\" " + cleanName + "\n";
+                    if (!relations.toString().contains(newRelation)) {
+                        relations.append(newRelation);
+                    }
+                }
+            } else {
+                if (classNames.contains(typeName)) {
+                    String newRelation = className + " --> " + typeName + "\n";
+                    if (!relations.toString().contains(newRelation)) {
+                        relations.append(newRelation);
+                    }
                 }
             }
         }

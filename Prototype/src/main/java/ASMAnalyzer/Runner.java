@@ -25,7 +25,7 @@ public class Runner {
         String umlCode = formatter.analyzeProject(paths);
         System.out.println(umlCode);
         try (PrintWriter out = new PrintWriter("output.txt")) {
-            out.println(umlCode);
+            // out.println(umlCode);
         }
         report.generateReport(umlCode);
 

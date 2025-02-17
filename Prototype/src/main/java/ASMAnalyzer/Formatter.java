@@ -21,7 +21,6 @@ public class Formatter {
             String[] pathParts = path.split("/");
             String className = pathParts[pathParts.length - 1];
             className = className.substring(0, className.indexOf("."));
-            System.out.println("CLASSNAME: " + className);
         }
 
         for(String path : list){
