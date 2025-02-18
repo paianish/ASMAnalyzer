@@ -23,9 +23,9 @@ public class Runner {
         Report report = new Report();
 
         String umlCode = formatter.analyzeProject(paths);
-        System.out.println(umlCode);
+        //System.out.println(umlCode);
         try (PrintWriter out = new PrintWriter("output.txt")) {
-            // out.println(umlCode);
+             out.println(umlCode);
         }
         report.generateReport(umlCode);
 
@@ -64,15 +64,21 @@ public class Runner {
                 } else {
                     pathParts = path.toString().split("\\\\");
                 }
-
-                StringBuilder classNameBuilder = new StringBuilder();
-                for (int i = 2; i < pathParts.length - 1; i++) {
-                    classNameBuilder.append(pathParts[i]).append('.');
+                String[] dirpathParts = directoryPath.split("/");
+                int startDex = 0;
+                for(int i =0; i < pathParts.length; i++){
+                    if(pathParts[i].equals(dirpathParts[dirpathParts.length-1])){
+                        startDex = i;
+                        break;
+                    }
                 }
-                String className = pathParts[pathParts.length-1];
-                className = className.substring(0, className.indexOf("."));
-                classNameBuilder.append(className);
-                classNames.add(classNameBuilder.toString());
+                String className="";
+                for(int i = startDex+1; i < pathParts.length; i++){
+                    className += pathParts[i] + ".";
+                }
+                className = className.substring(0, className.length()-7);
+                System.out.println(className);
+                classNames.add(className);
             });
         }catch (Exception e){
             e.printStackTrace();
