@@ -58,7 +58,13 @@ public class Runner {
             Files.walk(startPath).filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class")).forEach(path -> {
                 paths.add(path.toString());
 
-                String[] pathParts = path.toString().split("/");
+                String[] pathParts;
+                if (System.getProperty("os.name").equals("Mac OS X")) {
+                    pathParts = path.toString().split("/");
+                } else {
+                    pathParts = path.toString().split("\\\\");
+                }
+
                 StringBuilder classNameBuilder = new StringBuilder();
                 for (int i = 2; i < pathParts.length - 1; i++) {
                     classNameBuilder.append(pathParts[i]).append('.');
