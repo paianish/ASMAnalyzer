@@ -66,6 +66,38 @@ public class Analyzer {
                         relations.append(newRelation);
                     }
                 }
+            } else if(field.desc.contains("ArrayList")){
+                String signature = field.signature;
+                signature = signature.substring(signature.indexOf("<")+2);
+                signature = signature.substring(0,signature.length()-3);
+                signature.replace("/",".");
+                if(classNames.contains(signature)){
+                    String newRelation = className + " \"1\"-->\"*\" " + signature + "\n";
+                    if (!relations.toString().contains(newRelation)) {
+                        relations.append(newRelation);
+                    }
+                }
+
+            }else if(field.desc.contains("Map")){
+                String signature = field.signature;
+                signature = signature.substring(signature.indexOf("<")+2);
+                signature = signature.substring(0,signature.length()-3);
+                String type1 = signature.substring(0,signature.indexOf(";")).replace("/",".");
+                String type2 = signature.substring(signature.indexOf(";")+2).replace("/",".");
+                if(classNames.contains(type1)){
+                    String newRelation = className + " \"1\"-->\"*\" " + type1 + "\n";
+                    if (!relations.toString().contains(newRelation)) {
+                        relations.append(newRelation);
+                    }
+                }
+
+                if(classNames.contains(type2)){
+                    String newRelation = className + " \"1\"-->\"*\" " + type2 + "\n";
+                    if (!relations.toString().contains(newRelation)) {
+                        relations.append(newRelation);
+                    }
+                }
+
             } else {
                 if (classNames.contains(typeName)) {
                     String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
