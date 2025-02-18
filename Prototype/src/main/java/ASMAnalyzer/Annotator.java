@@ -92,6 +92,9 @@ public class Annotator {
         StringBuilder output = new StringBuilder();
 
         for(String packageName : packageMap.keySet()){
+            if (packageMap.get(packageName).getSingletonCount() == 0 && packageMap.get(packageName).getDecoratorCount() == 0) {
+                continue;
+            }
             output.append("note top of ").append(packageName).append("\n");
 
             output.append("    Decorator Count: ").append(packageMap.get(packageName).getDecoratorCount()).append("\n");
