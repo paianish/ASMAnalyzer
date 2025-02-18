@@ -68,7 +68,7 @@ public class Analyzer {
                 }
             } else {
                 if (classNames.contains(typeName)) {
-                    String newRelation = className + " --> " + typeName + "\n";
+                    String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                     }
@@ -101,10 +101,21 @@ public class Analyzer {
                 if (method.localVariables != null) {
                     for (LocalVariableNode localVars : method.localVariables) {
                         String typeName = Type.getType(localVars.desc).getClassName();
-                        if (!localVars.name.equals("this") && classNames.contains(typeName)) {
-                            String newRelation = className + " --> " + typeName + "\n";
-                            if (!relations.toString().contains(newRelation)) {
-                                relations.append(newRelation);
+                        if(typeName.contains("[")){
+                            String cleanName = typeName.substring(0, typeName.indexOf("["));
+                            if(!localVars.name.equals("this") && classNames.contains(cleanName)){
+                                String newRelation = className + " \"1\"-->\"1\" " + className + "\n";
+                                if (!relations.toString().contains(newRelation)) {
+                                    relations.append(newRelation);
+                                }
+
+                            }
+                        }else {
+                            if (!localVars.name.equals("this") && classNames.contains(typeName)) {
+                                String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
+                                if (!relations.toString().contains(newRelation)) {
+                                    relations.append(newRelation);
+                                }
                             }
                         }
                     }
