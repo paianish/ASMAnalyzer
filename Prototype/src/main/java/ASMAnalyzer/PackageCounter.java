@@ -8,6 +8,7 @@ public class PackageCounter {
     public PackageCounter(){
         decoratorCount = 0;
         singletonCount = 0;
+        abuseCount = 0;
     }
 
     public void incrementSingletonCount(){
