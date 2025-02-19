@@ -142,7 +142,7 @@ public class Annotator {
 
             output.append("    Decorator Count: ").append(packageMap.get(packageName).getDecoratorCount()).append("\n");
 
-            if(packageMap.get(packageName).getSingletonCount() >= 4){
+            if(packageMap.get(packageName).getAbuseCount() >= 4){
                 output.append("    SINGLETON ABUSE\n");
             }
             output.append("    Singleton Count: ").append(packageMap.get(packageName).getSingletonCount()).append("\n");

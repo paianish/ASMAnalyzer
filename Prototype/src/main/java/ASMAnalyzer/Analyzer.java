@@ -4,20 +4,20 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Analyzer {
 
     private Parser parser;
     private Annotator annotator;
     private Set<String> classNames;
+
+    private Map<String, Integer> classNameToRelations;
     public Analyzer(Set<String> classNames){
         parser = new Parser();
         annotator = new Annotator();
         this.classNames = classNames;
+        classNameToRelations = new HashMap<>();
     }
 
     public String analyzeFile(String path) throws IOException {
@@ -35,8 +35,14 @@ public class Analyzer {
         StringBuilder output = new StringBuilder();
         StringBuilder relations = new StringBuilder();
 
+
         //Class Name
         String className = classNode.name.replace('/', '.');
+
+        //Class Name to Relations map logic
+        if(!classNameToRelations.keySet().contains(className)){
+            classNameToRelations.put(className,0);
+        }
 
         //Interfaces
         for(String interfaces: classNode.interfaces){
@@ -64,6 +70,7 @@ public class Analyzer {
                     String newRelation = className + " \"1\"-->\"*\" " + cleanName + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
+                        createOrIncrement(cleanName);
                     }
                 }
             } else if(field.desc.contains("ArrayList")){
@@ -75,6 +82,7 @@ public class Analyzer {
                     String newRelation = className + " \"1\"-->\"*\" " + signature + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
+                        createOrIncrement(signature);
                     }
                 }
 
@@ -88,6 +96,8 @@ public class Analyzer {
                     String newRelation = className + " \"1\"-->\"*\" " + type1 + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
+                        createOrIncrement(type1);
+
                     }
                 }
 
@@ -95,6 +105,7 @@ public class Analyzer {
                     String newRelation = className + " \"1\"-->\"*\" " + type2 + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
+                        createOrIncrement(type2);
                     }
                 }
 
@@ -103,6 +114,7 @@ public class Analyzer {
                     String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
+                        createOrIncrement(typeName);
                     }
                 }
             }
@@ -139,6 +151,7 @@ public class Analyzer {
                                 String newRelation = className + " \"1\"-->\"1\" " + className + "\n";
                                 if (!relations.toString().contains(newRelation)) {
                                     relations.append(newRelation);
+                                    createOrIncrement(className);
                                 }
 
                             }
@@ -147,6 +160,7 @@ public class Analyzer {
                                 String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
                                 if (!relations.toString().contains(newRelation)) {
                                     relations.append(newRelation);
+                                    createOrIncrement(typeName);
                                 }
                             }
                         }
@@ -164,5 +178,13 @@ public class Analyzer {
         output.append(relations);
 
         return output.toString();
+    }
+
+    private void createOrIncrement(String className){
+        if(!classNameToRelations.keySet().contains(className)){
+            classNameToRelations.put(className,1);
+        }else {
+            classNameToRelations.put(className,classNameToRelations.get(className)+1);
+        }
     }
 }
