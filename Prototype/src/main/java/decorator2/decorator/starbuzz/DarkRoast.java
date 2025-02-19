@@ -1,4 +1,4 @@
-package headfirst.decorator.starbuzz;
+package decorator2.decorator.starbuzz;
 
 public class DarkRoast extends Beverage {
 	public DarkRoast() {

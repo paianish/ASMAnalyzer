@@ -5,14 +5,15 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Annotator {
     private Map<String, PackageCounter> packageMap;
+
     public Annotator(){
         packageMap = new HashMap<>();
     }
+
     public String annotate(ClassNode classNode){
         StringBuilder output = new StringBuilder();
 
@@ -34,35 +35,77 @@ public class Annotator {
             }
         }
 
+
+        //decorator pattern check
+        Set<String> compTypes = new HashSet<>();
+        if(classNode.superName !=null){
+            compTypes.add(classNode.superName.replace('/', '.'));
+        }
+
+
+        String decoratorParent = "";
+
+
+        for (String interfaces : classNode.interfaces) {
+//            interfaces = interfaces.replace('/', '.');
+//            for (FieldNode field : classNode.fields) {
+//                String typeName = Type.getType(field.desc).getClassName();
+//                if(typeName.equals(interfaces)) {
+//                    isDecorator = true;
+//                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+//                }
+            String interfaceName = interfaces.replace('/', '.');
+            compTypes.add(interfaceName);
+            }
+//        boolean matches = false;
+//        String matchType = "";
+
         //decorator pattern variables
         boolean isDecorator = false;
         String decoratorRelation = "";
 
-        //decorator pattern check
-        for (String interfaces : classNode.interfaces) {
-            interfaces = interfaces.replace('/', '.');
-            for (FieldNode field : classNode.fields) {
-                String typeName = Type.getType(field.desc).getClassName();
-                if(typeName.equals(interfaces)) {
-                    isDecorator = true;
-                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+        for(FieldNode field : classNode.fields){
+            String type = Type.getType(field.desc).getClassName();
+
+            if(compTypes.contains(type)){
+                isDecorator = true;
+                decoratorRelation = className + " *-- " + type + " : decorates\n";
+                break;
+            }
+        }
+
+        if(!isDecorator){
+            for(MethodNode method : classNode.methods){
+                if(method.name.equals("<init>")){
+                    Type[] argTypes = Type.getArgumentTypes(method.desc);
+                    for(Type argType : argTypes){
+                        String paramType = argType.getClassName();
+                        if(compTypes.contains(paramType)){
+                            isDecorator = true;
+                            decoratorRelation = className + " *-- " + paramType + " : decorates\n";
+                            break;
+                        }
+                    }
+                }
+                if(isDecorator){
+                    break;
                 }
             }
         }
 
-        String parent;
-        if(classNode.superName != null) {
-            parent = classNode.superName.replace('/', '.');
-        }
-        else{
-            parent = "";
-        }
+//        String parent;
+//        if(classNode.superName != null) {
+//            parent = classNode.superName.replace('/', '.');
+//        }
+//        else{
+//            parent = "";
+//        }
 
         //gets actual decorating classes
-        if(parent.endsWith("Decorator")){
-            isDecorator = true;
-            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
-        }
+//        if(parent.endsWith("Decorator")){
+//            isDecorator = true;
+//            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
+//        }
 
         if (isSingleton) {
             output.append(className).append(" -[#red]> ").append(className).append("\n");
