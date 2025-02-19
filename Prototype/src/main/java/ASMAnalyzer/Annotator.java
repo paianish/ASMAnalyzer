@@ -5,13 +5,16 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Annotator {
     private Map<String, PackageCounter> packageMap;
+    private ArrayList<String> singletons;
 
     public Annotator(){
         packageMap = new HashMap<>();
+        singletons = new ArrayList<>();
     }
 
     public String annotate(ClassNode classNode){
@@ -112,6 +115,8 @@ public class Annotator {
             output.append("class ").append(className).append(" <<Singleton>> #red {\n");
 
             packageMap.get(packageName).incrementSingletonCount();
+
+            singletons.add(className);
 
         } else if(isDecorator==true){
             output.append(decoratorRelation);
