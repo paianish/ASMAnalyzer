@@ -131,14 +131,14 @@ public class Annotator {
         return output.toString();
     }
 
-    public String getPackageName(String className){
+    private String getPackageName(String className){
         int lastDotIndex = className.lastIndexOf('.');
         return (lastDotIndex == -1) ? "" : className.substring(0, lastDotIndex);
     }
 
-    public String getNotes(){
+    public String getNotes(Map<String, Integer> classNameToRelations){
         StringBuilder output = new StringBuilder();
-
+        determineAbuse(classNameToRelations);
         for(String packageName : packageMap.keySet()){
             if (packageMap.get(packageName).getSingletonCount() == 0 && packageMap.get(packageName).getDecoratorCount() == 0) {
                 continue;
@@ -147,7 +147,7 @@ public class Annotator {
 
             output.append("    Decorator Count: ").append(packageMap.get(packageName).getDecoratorCount()).append("\n");
 
-            if(packageMap.get(packageName).getAbuseCount() >= 4){
+            if(packageMap.get(packageName).getAbuseCount() > 0){
                 output.append("    SINGLETON ABUSE\n");
             }
             output.append("    Singleton Count: ").append(packageMap.get(packageName).getSingletonCount()).append("\n");
@@ -156,5 +156,13 @@ public class Annotator {
         }
 
         return output.toString();
+    }
+
+    private void determineAbuse(Map<String, Integer> classNameToRelations){
+        for(String singleton : singletons){
+            if(classNameToRelations.get(singleton) < 2 || classNameToRelations.get(singleton) >= 4){
+                packageMap.get(getPackageName(singleton)).incrementAbuseCount();
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ public class Analyzer {
     }
 
     public String getNotes(){
-        return annotator.getNotes();
+        return annotator.getNotes(classNameToRelations);
     }
 
     private String analyzeClassNode(ClassNode classNode){
