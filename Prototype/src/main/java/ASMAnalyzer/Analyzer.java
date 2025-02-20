@@ -15,7 +15,7 @@ public class Analyzer {
     private Map<String, Integer> classNameToRelations;
     public Analyzer(Set<String> classNames){
         parser = new Parser();
-        annotator = new Annotator();
+        annotator = new Annotator(classNames);
         this.classNames = classNames;
         classNameToRelations = new HashMap<>();
     }

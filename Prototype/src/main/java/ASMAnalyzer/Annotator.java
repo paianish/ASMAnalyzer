@@ -13,9 +13,12 @@ public class Annotator {
     private Map<String, PackageCounter> packageMap;
     private ArrayList<String> singletons;
 
-    public Annotator(){
+    private Set<String> classNames;
+
+    public Annotator(Set<String> classNames){
         packageMap = new HashMap<>();
         singletons = new ArrayList<>();
+        this.classNames = classNames;
     }
 
     public String annotate(ClassNode classNode){
@@ -52,7 +55,9 @@ public class Annotator {
                 String typeName = Type.getType(field.desc).getClassName();
                 if(typeName.equals(interfaces)) {
                     isDecorator = true;
-                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+                    if(classNames.contains(typeName)) {
+                        decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+                    }
                 }
             }
         }
@@ -69,7 +74,9 @@ public class Annotator {
         //gets decorating classes
         if(parent.endsWith("Decorator")||(className.endsWith("Decorator"))){
             isDecorator = true;
-            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
+            if(classNames.contains(parent)) {
+                decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
+            }
         }
 
 
