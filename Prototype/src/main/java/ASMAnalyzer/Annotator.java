@@ -1,5 +1,6 @@
 package ASMAnalyzer;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -91,7 +92,13 @@ public class Annotator {
             output.append("class ").append(className).append(" #90D5FF {\n");
             packageMap.get(packageName).incrementDecoratorCount();
         }else{
-            output.append("class ").append(className).append(" {\n");
+            boolean myInterface = (Opcodes.ACC_INTERFACE&classNode.access) != 0;
+            if(myInterface){
+                output.append("interface ").append(className).append(" {\n");
+            }
+            else{
+                output.append("class ").append(className).append(" {\n");
+            }
 
         }
 
