@@ -171,7 +171,13 @@ public class Analyzer {
             }
         }
 
-
+        if (classNode.superName != null && !classNode.superName.equals("java/lang/Object")) {
+            String superClass = classNode.superName.replace('/', '.');
+            String inheritanceRelation = className + " -[#90D5FF]>" + superClass + "\n";
+            if (!relations.toString().contains(inheritanceRelation)) {
+                relations.append(inheritanceRelation);
+            }
+        }
 
         output.append("}\n");
 

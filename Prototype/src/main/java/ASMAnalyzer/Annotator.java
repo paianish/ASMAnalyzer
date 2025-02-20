@@ -46,9 +46,6 @@ public class Annotator {
         }
 
 
-        String decoratorParent = "";
-
-
         for (String interfaces : classNode.interfaces) {
 //            interfaces = interfaces.replace('/', '.');
 //            for (FieldNode field : classNode.fields) {
@@ -85,7 +82,7 @@ public class Annotator {
                         String paramType = argType.getClassName();
                         if(compTypes.contains(paramType)){
                             isDecorator = true;
-                            decoratorRelation = className + " *-- " + paramType + " : decorates\n";
+                            decoratorRelation = className + " --> " + paramType + " : decorates\n";
                             break;
                         }
                     }
@@ -96,19 +93,7 @@ public class Annotator {
             }
         }
 
-//        String parent;
-//        if(classNode.superName != null) {
-//            parent = classNode.superName.replace('/', '.');
-//        }
-//        else{
-//            parent = "";
-//        }
 
-        //gets actual decorating classes
-//        if(parent.endsWith("Decorator")){
-//            isDecorator = true;
-//            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
-//        }
 
         if (isSingleton) {
             output.append(className).append(" -[#red]> ").append(className).append("\n");
@@ -118,7 +103,7 @@ public class Annotator {
 
             singletons.add(className);
 
-        } else if(isDecorator==true){
+        } if(isDecorator){
             output.append(decoratorRelation);
             output.append("class ").append(className).append(" #90D5FF {\n");
 
@@ -127,6 +112,8 @@ public class Annotator {
             output.append("class ").append(className).append(" {\n");
 
         }
+
+
 
         return output.toString();
     }
