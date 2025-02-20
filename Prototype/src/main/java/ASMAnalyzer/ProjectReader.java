@@ -37,6 +37,7 @@ public class ProjectReader {
                 String className = classReader.getClassName().replace('/', '.');
                 System.out.println("CLASS NAME: " + className);
                 String packageName = className.contains(".") ? className.substring(0, className.lastIndexOf(".")) : className;
+                packageName = packageName.contains(".") ? packageName.substring(0, packageName.indexOf(".")) : packageName;
                 System.out.println("PACKAGE NAME: " + packageName);
                 if (WHITELIST.isEmpty() || WHITELIST.contains(packageName)) {
                     classNames.add(className);
