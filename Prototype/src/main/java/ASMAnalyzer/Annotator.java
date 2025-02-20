@@ -5,14 +5,18 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Annotator {
     private Map<String, PackageCounter> packageMap;
+    private ArrayList<String> singletons;
+
     public Annotator(){
         packageMap = new HashMap<>();
+        singletons = new ArrayList<>();
     }
+
     public String annotate(ClassNode classNode){
         StringBuilder output = new StringBuilder();
 
@@ -34,35 +38,62 @@ public class Annotator {
             }
         }
 
+
+        //decorator pattern check
+        Set<String> compTypes = new HashSet<>();
+        if(classNode.superName !=null){
+            compTypes.add(classNode.superName.replace('/', '.'));
+        }
+
+
+        for (String interfaces : classNode.interfaces) {
+//            interfaces = interfaces.replace('/', '.');
+//            for (FieldNode field : classNode.fields) {
+//                String typeName = Type.getType(field.desc).getClassName();
+//                if(typeName.equals(interfaces)) {
+//                    isDecorator = true;
+//                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+//                }
+            String interfaceName = interfaces.replace('/', '.');
+            compTypes.add(interfaceName);
+            }
+//        boolean matches = false;
+//        String matchType = "";
+
         //decorator pattern variables
         boolean isDecorator = false;
         String decoratorRelation = "";
 
-        //decorator pattern check
-        for (String interfaces : classNode.interfaces) {
-            interfaces = interfaces.replace('/', '.');
-            for (FieldNode field : classNode.fields) {
-                String typeName = Type.getType(field.desc).getClassName();
-                if(typeName.equals(interfaces)) {
-                    isDecorator = true;
-                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
+        for(FieldNode field : classNode.fields){
+            String type = Type.getType(field.desc).getClassName();
+
+            if(compTypes.contains(type)){
+                isDecorator = true;
+                decoratorRelation = className + "-[#90D5FF]>" + type + "\n";
+                break;
+            }
+        }
+
+        if(!isDecorator){
+            for(MethodNode method : classNode.methods){
+//                if(method.name.equals("<init>")){
+                    Type[] argTypes = Type.getArgumentTypes(method.desc);
+                    for(Type argType : argTypes){
+                        String paramType = argType.getClassName();
+                        if(compTypes.contains(paramType)){
+                            isDecorator = true;
+                            decoratorRelation = className + " -[#90D5FF]> " + paramType + "\n";
+                            break;
+                        }
+                    }
+//                }
+                if(isDecorator){
+                    break;
                 }
             }
         }
 
-        String parent;
-        if(classNode.superName != null) {
-            parent = classNode.superName.replace('/', '.');
-        }
-        else{
-            parent = "";
-        }
 
-        //gets actual decorating classes
-        if(parent.endsWith("Decorator")){
-            isDecorator = true;
-            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
-        }
 
         if (isSingleton) {
             output.append(className).append(" -[#red]> ").append(className).append("\n");
@@ -70,7 +101,9 @@ public class Annotator {
 
             packageMap.get(packageName).incrementSingletonCount();
 
-        } else if(isDecorator==true){
+            singletons.add(className);
+
+        } if(isDecorator){
             output.append(decoratorRelation);
             output.append("class ").append(className).append(" #90D5FF {\n");
 
@@ -80,17 +113,19 @@ public class Annotator {
 
         }
 
+
+
         return output.toString();
     }
 
-    public String getPackageName(String className){
+    private String getPackageName(String className){
         int lastDotIndex = className.lastIndexOf('.');
         return (lastDotIndex == -1) ? "" : className.substring(0, lastDotIndex);
     }
 
-    public String getNotes(){
+    public String getNotes(Map<String, Integer> classNameToRelations){
         StringBuilder output = new StringBuilder();
-
+        determineAbuse(classNameToRelations);
         for(String packageName : packageMap.keySet()){
             if (packageMap.get(packageName).getSingletonCount() == 0 && packageMap.get(packageName).getDecoratorCount() == 0) {
                 continue;
@@ -99,7 +134,7 @@ public class Annotator {
 
             output.append("    Decorator Count: ").append(packageMap.get(packageName).getDecoratorCount()).append("\n");
 
-            if(packageMap.get(packageName).getSingletonCount() >= 4){
+            if(packageMap.get(packageName).getAbuseCount() > 0){
                 output.append("    SINGLETON ABUSE\n");
             }
             output.append("    Singleton Count: ").append(packageMap.get(packageName).getSingletonCount()).append("\n");
@@ -108,5 +143,13 @@ public class Annotator {
         }
 
         return output.toString();
+    }
+
+    private void determineAbuse(Map<String, Integer> classNameToRelations){
+        for(String singleton : singletons){
+            if(classNameToRelations.get(singleton) < 2 || classNameToRelations.get(singleton) >= 4){
+                packageMap.get(getPackageName(singleton)).incrementAbuseCount();
+            }
+        }
     }
 }
