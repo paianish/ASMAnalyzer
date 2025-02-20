@@ -40,20 +40,6 @@ public class Annotator {
 
 
         //decorator pattern check
-        Set<String> compTypes = new HashSet<>();
-        if(classNode.superName !=null){
-            compTypes.add(classNode.superName.replace('/', '.'));
-        }
-
-
-        for (String interfaces : classNode.interfaces) {
-
-            String interfaceName = interfaces.replace('/', '.');
-            compTypes.add(interfaceName);
-            }
-//        boolean matches = false;
-//        String matchType = "";
-
         //decorator pattern variables
         boolean isDecorator = false;
         String decoratorRelation = "";
@@ -79,7 +65,7 @@ public class Annotator {
             parent = "";
         }
 
-        //gets actual decorating classes
+        //gets decorating classes
         if(parent.endsWith("Decorator")){
             isDecorator = true;
             decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
