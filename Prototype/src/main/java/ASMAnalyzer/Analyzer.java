@@ -110,7 +110,7 @@ public class Analyzer {
                 }
 
             } else {
-                if (classNames.contains(typeName)) {
+                if (classNames.contains(typeName)&&!typeName.contains("java.lang")) {
                     String newRelation = className + " \"1\"-->\"1\" " + typeName + "\n";
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);

@@ -66,7 +66,7 @@ public class Annotator {
         }
 
         //gets decorating classes
-        if(parent.endsWith("Decorator")){
+        if(parent.endsWith("Decorator")||(className.endsWith("Decorator"))){
             isDecorator = true;
             decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
         }
