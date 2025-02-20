@@ -12,18 +12,12 @@ public class Formatter {
         analyzer = new Analyzer(classNames);
     }
 
-    public String analyzeProject(ArrayList<String> list) throws IOException {
+    public String analyzeProject(ArrayList<String> paths) throws IOException {
         StringBuilder output = new StringBuilder();
 
         output.append("@startuml\n");
 
-        for (String path : list) {
-            String[] pathParts = path.split("/");
-            String className = pathParts[pathParts.length - 1];
-            className = className.substring(0, className.indexOf("."));
-        }
-
-        for(String path : list){
+        for(String path : paths){
             output.append(analyzer.analyzeFile(path));
         }
         output.append(analyzer.getNotes());
