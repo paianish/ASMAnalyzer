@@ -47,13 +47,7 @@ public class Annotator {
 
 
         for (String interfaces : classNode.interfaces) {
-//            interfaces = interfaces.replace('/', '.');
-//            for (FieldNode field : classNode.fields) {
-//                String typeName = Type.getType(field.desc).getClassName();
-//                if(typeName.equals(interfaces)) {
-//                    isDecorator = true;
-//                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
-//                }
+
             String interfaceName = interfaces.replace('/', '.');
             compTypes.add(interfaceName);
             }
@@ -92,24 +86,7 @@ public class Annotator {
         }
 
 
-//        if(!isDecorator){
-//            for(MethodNode method : classNode.methods){
-////                if(method.name.equals("<init>")){
-//                    Type[] argTypes = Type.getArgumentTypes(method.desc);
-//                    for(Type argType : argTypes){
-//                        String paramType = argType.getClassName();
-//                        if(compTypes.contains(paramType)){
-//                            isDecorator = true;
-//                            decoratorRelation = className + " -[#90D5FF]> " + paramType + "\n";
-//                            break;
-//                        }
-//                    }
-////                }
-//                if(isDecorator){
-//                    break;
-//                }
-//            }
-//        }
+
 
 
 
