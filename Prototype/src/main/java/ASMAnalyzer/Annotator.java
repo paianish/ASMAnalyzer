@@ -64,34 +64,52 @@ public class Annotator {
         boolean isDecorator = false;
         String decoratorRelation = "";
 
-        for(FieldNode field : classNode.fields){
-            String type = Type.getType(field.desc).getClassName();
 
-            if(compTypes.contains(type)){
-                isDecorator = true;
-                decoratorRelation = className + "-[#90D5FF]>" + type + "\n";
-                break;
-            }
-        }
-
-        if(!isDecorator){
-            for(MethodNode method : classNode.methods){
-//                if(method.name.equals("<init>")){
-                    Type[] argTypes = Type.getArgumentTypes(method.desc);
-                    for(Type argType : argTypes){
-                        String paramType = argType.getClassName();
-                        if(compTypes.contains(paramType)){
-                            isDecorator = true;
-                            decoratorRelation = className + " -[#90D5FF]> " + paramType + "\n";
-                            break;
-                        }
-                    }
-//                }
-                if(isDecorator){
-                    break;
+        for (String interfaces : classNode.interfaces) {
+            interfaces = interfaces.replace('/', '.');
+            for (FieldNode field : classNode.fields) {
+                String typeName = Type.getType(field.desc).getClassName();
+                if(typeName.equals(interfaces)) {
+                    isDecorator = true;
+                    decoratorRelation = className + "-[#90D5FF]>" + typeName + ": decorates\n";
                 }
             }
         }
+
+
+        String parent;
+        if(classNode.superName != null) {
+            parent = classNode.superName.replace('/', '.');
+        }
+        else{
+            parent = "";
+        }
+
+        //gets actual decorating classes
+        if(parent.endsWith("Decorator")){
+            isDecorator = true;
+            decoratorRelation = className + "-[#90D5FF]>" + parent + "\n";
+        }
+
+
+//        if(!isDecorator){
+//            for(MethodNode method : classNode.methods){
+////                if(method.name.equals("<init>")){
+//                    Type[] argTypes = Type.getArgumentTypes(method.desc);
+//                    for(Type argType : argTypes){
+//                        String paramType = argType.getClassName();
+//                        if(compTypes.contains(paramType)){
+//                            isDecorator = true;
+//                            decoratorRelation = className + " -[#90D5FF]> " + paramType + "\n";
+//                            break;
+//                        }
+//                    }
+////                }
+//                if(isDecorator){
+//                    break;
+//                }
+//            }
+//        }
 
 
 
@@ -103,10 +121,11 @@ public class Annotator {
 
             singletons.add(className);
 
-        } if(isDecorator){
+        } else if(isDecorator){
+            System.out.println("Decorator!");
             output.append(decoratorRelation);
+            System.out.println(decoratorRelation);
             output.append("class ").append(className).append(" #90D5FF {\n");
-
             packageMap.get(packageName).incrementDecoratorCount();
         }else{
             output.append("class ").append(className).append(" {\n");
