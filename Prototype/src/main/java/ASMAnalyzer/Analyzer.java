@@ -176,6 +176,7 @@ public class Analyzer {
             String inheritanceRelation = className + " --|>" + superClass + "\n";
             if (!relations.toString().contains(inheritanceRelation)) {
                 relations.append(inheritanceRelation);
+                createOrIncrement(superClass);
             }
         }
 
