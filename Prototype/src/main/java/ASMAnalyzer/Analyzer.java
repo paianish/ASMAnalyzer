@@ -174,7 +174,7 @@ public class Analyzer {
         if (classNode.superName != null && !classNode.superName.equals("java/lang/Object")) {
             String superClass = classNode.superName.replace('/', '.');
             String inheritanceRelation = className + " --|>" + superClass + "\n";
-            if (!relations.toString().contains(inheritanceRelation)) {
+            if (!relations.toString().contains(inheritanceRelation) && classNames.contains(superClass)) {
                 relations.append(inheritanceRelation);
                 createOrIncrement(superClass);
             }
