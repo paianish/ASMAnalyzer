@@ -69,24 +69,24 @@ public class Annotator {
 
             if(compTypes.contains(type)){
                 isDecorator = true;
-                decoratorRelation = className + " *-- " + type + " : decorates\n";
+                decoratorRelation = className + "-[#90D5FF]>" + type + "\n";
                 break;
             }
         }
 
         if(!isDecorator){
             for(MethodNode method : classNode.methods){
-                if(method.name.equals("<init>")){
+//                if(method.name.equals("<init>")){
                     Type[] argTypes = Type.getArgumentTypes(method.desc);
                     for(Type argType : argTypes){
                         String paramType = argType.getClassName();
                         if(compTypes.contains(paramType)){
                             isDecorator = true;
-                            decoratorRelation = className + " --> " + paramType + " : decorates\n";
+                            decoratorRelation = className + " -[#90D5FF]> " + paramType + "\n";
                             break;
                         }
                     }
-                }
+//                }
                 if(isDecorator){
                     break;
                 }
