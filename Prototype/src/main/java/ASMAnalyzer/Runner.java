@@ -1,38 +1,37 @@
 package ASMAnalyzer;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.nio.file.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Runner {
+    private static String PROJECT_DIR;
+    private static List<String> WHITELIST;
 
     public static void main(String[] args) throws IOException {
-        Set<String> classNames = new HashSet<>();
-        ArrayList<String> paths = new ArrayList<>();
+        runCLI();
 
-        String directoryPath = "target/classes";
+        // Parse project dir
+        ProjectReader projectReader = new ProjectReader(PROJECT_DIR, WHITELIST);
+        projectReader.findClassFiles();
 
-        paths = findClassFiles(directoryPath, classNames);
-
-        Formatter formatter = new Formatter(classNames);
-        Report report = new Report();
-
-        String umlCode = formatter.analyzeProject(paths);
-        //System.out.println(umlCode);
+        // Formatter
+        Formatter formatter = new Formatter(projectReader.getClassNames());
+        String umlCode = formatter.analyzeProject(projectReader.getClassPaths());
         try (PrintWriter out = new PrintWriter("output.txt")) {
-             out.println(umlCode);
+            out.println(umlCode);
         }
+
+        // SVG Generation
+        Report report = new Report();
         report.generateReport(umlCode);
-
         String outputImagePath = "output.svg";
-
         Desktop desktop = Desktop.getDesktop();
-
         if (desktop.isSupported(Desktop.Action.OPEN)) {
             try {
                 File svgFile = new File(outputImagePath);
@@ -43,46 +42,36 @@ public class Runner {
                     System.out.println("File does not exist.");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Failed to open file " + outputImagePath);
             }
         } else {
             System.out.println("Open action is not supported on this system.");
         }
     }
 
-    private static ArrayList<String> findClassFiles(String directoryPath, Set<String> classNames){
-        ArrayList<String> paths = new ArrayList<>();
-        Path startPath = Paths.get(directoryPath);
+    private static void runCLI() {
+        Scanner scanner = new Scanner(System.in);
 
-        try{
-            Files.walk(startPath).filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class")).forEach(path -> {
-                paths.add(path.toString());
+        //prompt for directory name
+        System.out.print("Enter directory name: ");
+        String directory = scanner.nextLine();
 
-                String[] pathParts;
-                if (System.getProperty("os.name").equals("Mac OS X")) {
-                    pathParts = path.toString().split("/");
-                } else {
-                    pathParts = path.toString().split("\\\\");
-                }
-                String[] dirpathParts = directoryPath.split("/");
-                int startDex = 0;
-                for(int i =0; i < pathParts.length; i++){
-                    if(pathParts[i].equals(dirpathParts[dirpathParts.length-1])){
-                        startDex = i;
-                        break;
-                    }
-                }
-                String className="";
-                for(int i = startDex+1; i < pathParts.length; i++){
-                    className += pathParts[i] + ".";
-                }
-                className = className.substring(0, className.length()-7);
-                System.out.println(className);
-                classNames.add(className);
-            });
-        }catch (Exception e){
-            e.printStackTrace();
+        //prompt for whitelist names
+        System.out.print("Enter package names to whitelist (separated by spaces): ");
+        String whitelistInput = scanner.nextLine();
+        String[] whitelist = whitelistInput.trim().split("\\s+");  // \s for whitespace, + for once or more
+
+        // Optionally, print the inputs to verify
+        System.out.println("Directory: " + directory);
+        System.out.println("Whitelist:");
+        for (String name : whitelist) {
+            System.out.println(" - " + name);
         }
-        return paths;
+        PROJECT_DIR = directory;
+        if (whitelist[0].isEmpty()) {
+            WHITELIST = new ArrayList<>();
+        } else {
+            WHITELIST = Arrays.asList(whitelist);
+        }
     }
 }
