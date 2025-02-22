@@ -61,12 +61,6 @@ public class Runner {
         String whitelistInput = scanner.nextLine();
         String[] whitelist = whitelistInput.trim().split("\\s+");  // \s for whitespace, + for once or more
 
-        // Optionally, print the inputs to verify
-        System.out.println("Directory: " + directory);
-        System.out.println("Whitelist:");
-        for (String name : whitelist) {
-            System.out.println(" - " + name);
-        }
         PROJECT_DIR = directory;
         if (whitelist[0].isEmpty()) {
             WHITELIST = new ArrayList<>();

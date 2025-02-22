@@ -12,12 +12,14 @@ import java.util.*;
 public class Annotator {
     private Map<String, PackageCounter> packageMap;
     private ArrayList<String> singletons;
-
     private Set<String> classNames;
+    private ArrayList<String> classesOverDepThreshold;
+    private final int DEPENDENCY_THRESHOLD = 3;
 
     public Annotator(Set<String> classNames){
         packageMap = new HashMap<>();
         singletons = new ArrayList<>();
+        classesOverDepThreshold = new ArrayList<>();
         this.classNames = classNames;
     }
 
@@ -119,7 +121,7 @@ public class Annotator {
         return (lastDotIndex == -1) ? "" : className.substring(0, lastDotIndex);
     }
 
-    public String getNotes(Map<String, Integer> classNameToRelations){
+    public String getNotes(Map<String, Integer> classNameToRelations, Map<String, Integer> dependencyTracker){
         StringBuilder output = new StringBuilder();
         determineAbuse(classNameToRelations);
         for(String packageName : packageMap.keySet()){
@@ -138,6 +140,24 @@ public class Annotator {
             output.append("end note \n\n");
         }
 
+        for (String className : dependencyTracker.keySet()) {
+            if (dependencyTracker.get(className) > DEPENDENCY_THRESHOLD) {
+                classesOverDepThreshold.add(className);
+                output.append("note top of ").append(className).append("\n");
+                output.append("Too many dependencies\n");
+                output.append("end note \n\n");
+            }
+        }
+        if (!classesOverDepThreshold.isEmpty()) {
+            StringBuilder temp = new StringBuilder();
+            temp.append("note \"");
+            temp.append("Classes that exceed the dependency threshold:\\n");
+            for (String className : classesOverDepThreshold) {
+                temp.append(className).append("\\n");
+            }
+            temp.append("\" as N1\n");
+            output.append(temp);
+        }
         return output.toString();
     }
 

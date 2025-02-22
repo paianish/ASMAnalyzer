@@ -11,24 +11,25 @@ public class Analyzer {
     private Parser parser;
     private Annotator annotator;
     private Set<String> classNames;
-
     private Map<String, Integer> classNameToRelations;
+    private Map<String, Integer> dependencyTracker;
+
     public Analyzer(Set<String> classNames){
         parser = new Parser();
         annotator = new Annotator(classNames);
         this.classNames = classNames;
         classNameToRelations = new HashMap<>();
+        dependencyTracker = new HashMap<>();
     }
 
     public String analyzeFile(String path) throws IOException {
         ClassNode classNode = new ClassNode();
         parser.parseFile(path).accept(classNode, 0);
-        String analyzedClassCode = annotator.annotate(classNode)+analyzeClassNode(classNode);
-        return analyzedClassCode;
+        return annotator.annotate(classNode)+analyzeClassNode(classNode);
     }
 
     public String getNotes(){
-        return annotator.getNotes(classNameToRelations);
+        return annotator.getNotes(classNameToRelations, dependencyTracker);
     }
 
     private String analyzeClassNode(ClassNode classNode){
@@ -48,6 +49,7 @@ public class Analyzer {
         for(String interfaces: classNode.interfaces){
             interfaces = interfaces.replace('/', '.');
             String newRelation = className + " ..|> " + interfaces + ": implements\n";
+            createOrIncrementDependency(className);
             if(!relations.toString().contains(newRelation)){
                 relations.append(newRelation);
             }
@@ -71,6 +73,7 @@ public class Analyzer {
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                         createOrIncrement(cleanName);
+                        createOrIncrementDependency(className);
                     }
                 }
             } else if(field.desc.contains("ArrayList")){
@@ -83,6 +86,7 @@ public class Analyzer {
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                         createOrIncrement(signature);
+                        createOrIncrementDependency(className);
                     }
                 }
 
@@ -97,7 +101,7 @@ public class Analyzer {
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                         createOrIncrement(type1);
-
+                        createOrIncrementDependency(className);
                     }
                 }
 
@@ -106,6 +110,7 @@ public class Analyzer {
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                         createOrIncrement(type2);
+                        createOrIncrementDependency(className);
                     }
                 }
 
@@ -115,6 +120,7 @@ public class Analyzer {
                     if (!relations.toString().contains(newRelation)) {
                         relations.append(newRelation);
                         createOrIncrement(typeName);
+                        createOrIncrementDependency(className);
                     }
                 }
             }
@@ -161,6 +167,7 @@ public class Analyzer {
                                 if (!relations.toString().contains(newRelation)) {
                                     relations.append(newRelation);
                                     createOrIncrement(typeName);
+                                    createOrIncrementDependency(className);
                                 }
                             }
                         }
@@ -188,10 +195,18 @@ public class Analyzer {
     }
 
     private void createOrIncrement(String className){
-        if(!classNameToRelations.keySet().contains(className)){
+        if(!classNameToRelations.containsKey(className)){
             classNameToRelations.put(className,1);
         }else {
-            classNameToRelations.put(className,classNameToRelations.get(className)+1);
+            classNameToRelations.put(className, classNameToRelations.get(className)+1);
+        }
+    }
+
+    private void createOrIncrementDependency(String className) {
+        if (!dependencyTracker.containsKey(className)) {
+            dependencyTracker.put(className, 1);
+        } else {
+            dependencyTracker.put(className, dependencyTracker.get(className) + 1);
         }
     }
 }

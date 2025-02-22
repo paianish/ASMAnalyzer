@@ -2,12 +2,11 @@ package ASMAnalyzer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 public class Formatter {
+    private final Analyzer analyzer;
 
-    private Analyzer analyzer;
     public Formatter(Set<String> classNames){
         analyzer = new Analyzer(classNames);
     }
